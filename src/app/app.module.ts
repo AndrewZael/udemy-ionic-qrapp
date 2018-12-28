@@ -7,6 +7,9 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage, TabsPage, MapaPage, GuardadosPage } from '../pages/index.paginas'
 
+//mapas
+import { AgmCoreModule } from '@agm/core';
+
 //Providers
 import { HistorialProvider } from '../providers/historial/historial'
 
@@ -24,7 +27,10 @@ import { InAppBrowser } from '@ionic-native/in-app-browser'
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBfVxSXd9TgtC_bmlx-0xqP2P9rg4DFHOc'
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [

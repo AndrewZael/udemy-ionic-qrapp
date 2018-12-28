@@ -31,7 +31,7 @@ export class HomePage {
       "Format: " + result.format + "\n" +
       "Cancelled: " + result.cancelled)
 
-      if(result.cancelled == 0 && result.text != null){
+      if(result.cancelled == false && result.text != null){
         this._historialProvider.agregarHistorial(result.text)
       }
 
