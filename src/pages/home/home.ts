@@ -20,7 +20,18 @@ export class HomePage {
 
   scan(){
     if(!this.platform.is('cordova')){
-      this._historialProvider.agregarHistorial('http://www.google.com')
+      //this._historialProvider.agregarHistorial('http://www.google.com')
+      //this._historialProvider.agregarHistorial('geo:-33.397250,-70.651070')
+      this._historialProvider.agregarHistorial( `BEGIN:VCARD
+VERSION:2.1
+N:Kent;Clark
+FN:Clark Kent
+ORG:
+TEL;HOME;VOICE:12345
+TEL;TYPE=cell:67890
+ADR;TYPE=work:;;;
+EMAIL:clark@superman.com
+END:VCARD` );
       return
     }
     console.log('Realizando scanner')
