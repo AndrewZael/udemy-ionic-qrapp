@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ScanData } from '../../models/scan-data.model'
 import { InAppBrowser } from '@ionic-native/in-app-browser'
-import { ModalController } from 'ionic-angular'
+import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
+import { ModalController, Platform, ToastController } from 'ionic-angular'
 import { MapaPage } from '../../pages/mapa/mapa'
 
 @Injectable()
@@ -10,7 +11,10 @@ export class HistorialProvider {
   private _historial:ScanData[] = []
 
   constructor(private iab: InAppBrowser,
-              private modalCtrl: ModalController) {}
+              private modalCtrl: ModalController,
+              private contacts: Contacts,
+              private platform:Platform,
+              private toast:ToastController) {}
 
   agregarHistorial(texto:string){
      let data = new ScanData(texto)
@@ -33,15 +37,49 @@ export class HistorialProvider {
       case 'vcard':
         this.crearContacto(scan.info)
       break
+      case 'email':
+        this.iab.create(this.mailTo(scan.info), '_system')
+      break
 
       default:
         console.error('Tipo no soportado')
     }
   }
   
+
+  private mailTo(info:string){
+       let infoMailArray = info.split(';')
+       let mail = infoMailArray[0].replace('MATMSG:TO:','')
+       let subject = infoMailArray[1].replace('SUB:', '')
+       let body = infoMailArray[2].replace('BODY:', '')
+       return 'mailto: '+ mail + '?subject='+ subject + '&body='+ body
+  }
+
   private crearContacto(texto:string){
       let campos:any = this.parse_vcard(texto)
-      console.log(campos)
+      
+      let nombre = campos['fn']
+      let tel = campos.tel[0].value[0]
+
+      if(!this.platform.is('cordova')){
+        console.warn('Estoy en la computadora');  
+        return
+      }
+      let contact:Contact = this.contacts.create()
+      contact.name = new ContactName(null, nombre)
+      contact.phoneNumbers = [ new ContactField('Mobile', tel) ]
+      contact.save().then(
+          ()=> this.crearToast('Contacto '+ nombre + ' Creado'),
+          (error)=> this.crearToast('Error al crear contacto: '+ error)
+      )
+      
+  }
+
+  private crearToast(mensaje:string){
+    this.toast.create({
+        message: mensaje,
+        duration: 2500
+    }).present()
   }
 
   private parse_vcard( input:string ) {

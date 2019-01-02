@@ -16,6 +16,7 @@ import { HistorialProvider } from '../providers/historial/historial'
 //Plugins
 import { BarcodeScanner  } from '@ionic-native/barcode-scanner'
 import { InAppBrowser } from '@ionic-native/in-app-browser'
+import { Contacts } from '@ionic-native/contacts'
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser'
     SplashScreen,
     BarcodeScanner,
     InAppBrowser,
+    Contacts,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     HistorialProvider
   ]
